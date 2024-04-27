@@ -28,22 +28,7 @@ impl PaymentService for MyPaymentService {
     }
 }
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let addr = "[::1]:50051".parse()?;
-    let payment_service = MyPaymentService::default();
-    let transaction_service = MyTransactionService::default();
-    let chat_service = MyChatService::default();
 
-    Server::builder()
-        .add_service(PaymentServiceServer::new(payment_service))
-        .add_service(TransactionServiceServer::new(transaction_service))
-        .add_service(ChatServiceServer::new(chat_service))
-        .serve(addr)
-        .await?;
-
-    Ok(())
-}
 
 #[derive(Default)]
 pub struct MyTransactionService {}
@@ -107,4 +92,21 @@ impl ChatService for MyChatService {
 
         Ok(Response::new(ReceiverStream::new(rx)))
     }
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let addr = "[::1]:50051".parse()?;
+    let payment_service = MyPaymentService::default();
+    let transaction_service = MyTransactionService::default();
+    let chat_service = MyChatService::default();
+
+    Server::builder()
+        .add_service(PaymentServiceServer::new(payment_service))
+        .add_service(TransactionServiceServer::new(transaction_service))
+        .add_service(ChatServiceServer::new(chat_service))
+        .serve(addr)
+        .await?;
+
+    Ok(())
 }

@@ -30,6 +30,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut stream = transaction_client.get_transaction_history(request).await?.into_inner();
     while let Some(transaction) = stream.message().await? {
+        
         println!("Transaction: {:?}", transaction);
     }
 
